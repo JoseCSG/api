@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "config": "^3.3.9",
+    "datetime": "^0.0.3",
+    "decouple": "^1.0.1"
+  }
+}
