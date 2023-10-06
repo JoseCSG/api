@@ -37,3 +37,4 @@ def add_organization():
     return jsonify({"message": "success"}), 200
   except:
     return jsonify({"error": "Error creating the organization"})
+  

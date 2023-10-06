@@ -10,7 +10,9 @@ main = Blueprint('publications_blueprint', __name__)
 def get_publications():
   has_access = Security.verify_token(request.headers)
   if has_access:
-    return jsonify({"message": "success!"}), 200
+    data = db.publications.find()
+    res = json_util.dumps(data)
+    return Response(res, mimetype='application/json'), 200
   else:
     return jsonify({"error": "Unauthorized"}), 401
   

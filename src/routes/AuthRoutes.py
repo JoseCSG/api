@@ -9,7 +9,6 @@ main = Blueprint('auth_blueprint', __name__)
 
 @main.route('/', methods=['POST'])
 def login():
-  print(request.json)
   username = request.json['username']
   password = request.json['password']
   if not username:
