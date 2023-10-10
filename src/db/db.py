@@ -9,6 +9,8 @@ MONGO_DBNAME = config("MONGO_DBNAME")
 #client = MongoClient("mongodb://localhost:27017/")
 
 uri = "mongodb+srv://jcsg:SKxXLxVQOqdnHjFQ@cluster0.3cptiz2.mongodb.net/?retryWrites=true&w=majority"
+#ssh -L 27018:localhost:27017 admin01@10.14.255.180 -N
+
 client = MongoClient(uri, tlsAllowInvalidCertificates=True)
 client.admin.command('ismaster')
 db = client[MONGO_DBNAME]

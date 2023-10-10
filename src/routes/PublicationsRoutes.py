@@ -29,6 +29,7 @@ def create_publication():
         "description": data["description"],
         "img_url": data["img_url"],
         "likes": 0,
+        "comments": 0,
         "user_id": data["user_id"],
         "org_id": data["org_id"],
         "created_at": datetime.now(),
