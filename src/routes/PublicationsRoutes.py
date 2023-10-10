@@ -10,7 +10,9 @@ main = Blueprint('publications_blueprint', __name__)
 def get_publications():
   has_access = Security.verify_token(request.headers)
   if has_access:
-    return jsonify({"message": "success!"}), 200
+    data = db.publications.find().sort("created_at", -1).limit(3);
+    res = json_util.dumps(data)
+    return Response(res, mimetype='application/json'), 200
   else:
     return jsonify({"error": "Unauthorized"}), 401
   
@@ -21,17 +23,20 @@ def create_publication():
     data = request.get_json()
     if not data['title'] or not data['description'] or not data['user_id'] or not data['org_id']:
       return jsonify({"error": "Data not completed"})
-    pub = {
-      "title": data["title"],
-      "description": data["description"],
-      "img_url": data["img_url"],
-      "likes": 0,
-      "user_id": data["user_id"],
-      "org_id": data["org_id"],
-      "created_at": datetime.now(),
-    }
-    db.publications.insert_one(pub)
-    return jsonify({"message": "success!"}), 200
+    try:
+      pub = {
+        "title": data["title"],
+        "description": data["description"],
+        "img_url": data["img_url"],
+        "likes": 0,
+        "user_id": data["user_id"],
+        "org_id": data["org_id"],
+        "created_at": datetime.now(),
+      }
+      db.publications.insert_one(pub)
+      return jsonify({"message": "success!"}), 200
+    except Exception as e:
+      return jsonify({"error": str(e)}), 400
   else:
     return jsonify({"error": "Unauthorized"}), 401
 

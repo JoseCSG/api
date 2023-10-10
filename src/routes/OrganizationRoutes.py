@@ -30,10 +30,12 @@ def add_organization():
     org = {
       "name": data['name'],
       "description": data['description'],
-      "number": data['number']
+      "number": data['number'],
+      "img_url": data['img_url'],
     }
     print(org)
     db.organizations.insert_one(org)
     return jsonify({"message": "success"}), 200
   except:
     return jsonify({"error": "Error creating the organization"})
+  

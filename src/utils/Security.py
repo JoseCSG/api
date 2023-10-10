@@ -1,17 +1,16 @@
-from decouple import config
 import datetime
 import pytz
 import jwt
 
 class Security():
   tz = pytz.timezone('America/Bogota')
-  secret = config('JWT_KEY')
+  secret = "A0Zr98j/3yaeihfbcnb]]234X R~XHH!jmN]"
 
   @classmethod
   def generate_token(cls, authenticated_user):
     payload = {
       'iat': datetime.datetime.now(tz=cls.tz),
-      'exp': datetime.datetime.now(tz=cls.tz) + datetime.timedelta(days=1),
+      'exp': datetime.datetime.now(tz=cls.tz) + datetime.timedelta(days=10),
       'username': authenticated_user.username,
       'email': authenticated_user.email
     }
