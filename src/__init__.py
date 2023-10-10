@@ -3,7 +3,7 @@ from .routes import AuthRoutes
 from .routes import PublicationsRoutes
 from .routes import UserRoutes
 from .routes import OrganizationRoutes
-
+from .routes import CommentsRoutes
 
 app = Flask(__name__)
 def init_app(config):
@@ -13,5 +13,6 @@ def init_app(config):
   app.register_blueprint(PublicationsRoutes.main, url_prefix="/publication")
   app.register_blueprint(UserRoutes.main, url_prefix="/user")
   app.register_blueprint(OrganizationRoutes.main, url_prefix="/org")
+  app.register_blueprint(CommentsRoutes.main, url_prefix="/comment")
 
   return app
