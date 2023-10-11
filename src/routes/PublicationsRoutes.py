@@ -42,7 +42,7 @@ def create_publication():
     return jsonify({"error": "Unauthorized"}), 401
 
 @main.route('/<id>', methods=['GET'])
-def get_publication():
+def get_publication(id):
   has_access = Security.verify_token(request.headers)
   if has_access:
     pub  = db.publications.find_one({"_id": ObjectId(id)})
@@ -90,6 +90,19 @@ def get_publications_org(id):
   if has_access:
     try:
       pubs = db.publications.find({"org_id": id})
+      res = json_util.dumps(pubs)
+      return Response(res, mimetype='application/json'), 200
+    except Exception as e:
+      return {"error": str(e)}, 400
+  else:
+    return jsonify({"error": "Unauthorized"}), 401
+  
+@main.route('/user/<id>', methods=['GET'])
+def get_publications_user(id):
+  has_access = Security.verify_token(request.headers)
+  if has_access:
+    try:
+      pubs = db.publications.find({"user_id": id}).sort("created_at", -1).limit(10)
       res = json_util.dumps(pubs)
       return Response(res, mimetype='application/json'), 200
     except Exception as e:
