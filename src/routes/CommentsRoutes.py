@@ -18,8 +18,8 @@ def get_comments():
 def get_comments_pub(id):
   try:
     comments = db.comments.find({"publication_id": ObjectId(id)}).limit(5)
-
     res = json_util.dumps(comments)
+    print(res)
     return Response(res, mimetype='application/json'), 200
   except Exception as e:
     return jsonify({"error": str(e)}), 401
@@ -39,6 +39,7 @@ def add_comment(id):
       "created_at": datetime.now(),
     }
     db.comments.insert_one(comment)
+    db.publications.update_one({"_id": ObjectId(id)}, {"$inc": {"comments": 1}})
     return jsonify({"message": "success!"}), 200
   except Exception as e:
     return jsonify({"error": str(e)}), 401
