@@ -10,7 +10,7 @@ main = Blueprint('publications_blueprint', __name__)
 def get_publications():
   has_access = Security.verify_token(request.headers)
   if has_access:
-    data = db.publications.find().sort("created_at", -1).limit(3);
+    data = db.publications.find().sort("created_at", -1).limit(10)
     res = json_util.dumps(data)
     return Response(res, mimetype='application/json'), 200
   else:
