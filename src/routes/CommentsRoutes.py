@@ -30,16 +30,34 @@ def add_comment(id):
     data = request.get_json()
     if not data['comment'] or not data['user_id']:
       return jsonify({"error": "Data not completed"})
+    user = db.users.find_one({"_id": ObjectId(data["user_id"])})
     comment = {
       "comment": data["comment"],
-      "name": data["name"],
+      "name": user["name"],
       "likes": 0,
       "user_id": data["user_id"],
       "publication_id": ObjectId(id),
       "created_at": datetime.now(),
+      "img_url": user["img_url"]
     }
     db.comments.insert_one(comment)
     db.publications.update_one({"_id": ObjectId(id)}, {"$inc": {"comments": 1}})
+    return jsonify({"message": "success!"}), 200
+  except Exception as e:
+    return jsonify({"error": str(e)}), 401
+
+@main.route('/like/<id_like>', methods=["PATCH"])
+def like_comment(id_like):
+  try:
+    db.comments.update_one({"_id": ObjectId(id_like)}, {"$inc": {"likes": 1}})
+    return jsonify({"message": "success!"}), 200
+  except Exception as e:
+    return jsonify({"error": str(e)}), 401
+  
+@main.route('/dislike/<id_dislike>', methods=["PATCH"])
+def dislike_comment(id_dislike):
+  try:
+    db.comments.update_one({"_id": ObjectId(id_dislike)}, {"$inc": {"likes": -1}})
     return jsonify({"message": "success!"}), 200
   except Exception as e:
     return jsonify({"error": str(e)}), 401

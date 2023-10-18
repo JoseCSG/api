@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from datetime import datetime
 
 from src.services.models.Publication import Publication
 from src.services.models.User import User
@@ -26,12 +27,20 @@ def login():
 @main.route('/sign-up/user', methods=['POST'])
 def signup():
   try:
+    if not request.json['tags'] or not request.json['number']:
+      return jsonify({"error": "Missing params"}), 401
+    
     data = {
-      "name": request.json["name"],
-      "last_name": request.json['last_name'],
-      "email": request.json['email'],
+      "name": "",
+      "last_name": "",
+      "email": "",
       "number": request.json['number'],
-      "password": request.json['password']
+      "password": "",
+      "tags": request.json['tags'],
+      "liked_pubs": [],
+      "disliked_pubs": [],
+      "org_follow": [],
+      "created_at": datetime.now(),
     }
     res = db.users.insert_one(data)
     return jsonify({"success": "User created succesfully"}), 200

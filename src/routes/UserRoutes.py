@@ -42,3 +42,46 @@ def delete_user(id):
     return jsonify({"message": "success!"}), 200
   except:
     return jsonify({"error": "An error happened while deleting the user"}), 500
+  
+@main.route('/following/<id>', methods=['GET'])
+def get_following(id):
+  try:
+    following = db.users.find_one({"_id": ObjectId(id)})["orgs_followed"]
+    res = []
+    for id in following:
+      org = db.organizations.find_one({"_id": ObjectId(id)})
+      res.append({
+        "id": id,
+        "name": org["name"],
+        "img_src": org["img_src"]
+      })
+    return jsonify(res), 200
+  except Exception as e:
+    return jsonify({"error": "An error happened while getting the following", "details": str(e)}), 500
+  
+
+@main.route('/follow/<id_org>/<id_usuario>', methods=['PATCH'])
+def follow_org(id_org, id_usuario):
+  has_access = Security.verify_token(request.headers)
+  if has_access:
+    try:
+      db.users.update_one({"_id": ObjectId(id_usuario)}, {"$push": {"orgs_followed": id_org}})
+      db.organizations.update_one({"_id": ObjectId(id_org)}, {"$inc": {"followers": 1}})
+      return jsonify({"message": "success"}), 200
+    except Exception as e:
+      return jsonify({"error": str(e)}), 401
+    
+
+@main.route('/unfollow/<id_org>/<id_usuario>', methods=['PATCH'])
+def unfollow_org(id_org, id_usuario):
+  has_access = Security.verify_token(request.headers)
+  if has_access:
+    try:
+      db.users.update_one({"_id": ObjectId(id_usuario)}, {"$pull": {"orgs_followed": id_org}})
+      db.organizations.update_one({"_id": ObjectId(id_org)}, {"$inc": {"followers": -1}})
+      return jsonify({"message": "success"}), 200
+    except Exception as e:
+      return jsonify({"error": str(e)}), 401
+
+
+

@@ -11,5 +11,5 @@ MONGO_DBNAME = config("MONGO_DBNAME")
 uri = "mongodb+srv://jcsg:SKxXLxVQOqdnHjFQ@cluster0.3cptiz2.mongodb.net/?retryWrites=true&w=majority"
 #ssh -L 27018:localhost:27017 admin01@10.14.255.180 -N
 
-client = MongoClient(uri, tlsAllowInvalidCertificates=True)
+client = MongoClient(uri)
 db = client[MONGO_DBNAME]
