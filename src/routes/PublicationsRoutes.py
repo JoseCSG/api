@@ -15,9 +15,8 @@ def get_publications(id_user):
     orgs_followed = user.get("orgs_followed", [])
     data = []
     for org in orgs_followed:
-      print(org)
       # Iterate over the cursor to append actual documents to the data list
-      for pub in db.publications.find({"org_id": org}).sort("created_at", -1).limit(5):
+      for pub in db.publications.find({"org_id": org}).sort("created_at", -1).limit(5):        
         data.append(pub)
 
     pubs = []
@@ -28,7 +27,12 @@ def get_publications(id_user):
         org = db.organizations.find_one({"_id": ObjectId(pub_copy["org_id"])})
         if org:
           pub_copy["img_org"] = org["img_src"]
-          pubs.append(pub_copy)
+        if str(pub_copy["_id"]) in user["liked_pubs"]:
+          pub_copy["liked"] = True
+        else:
+          pub_copy["liked"] = False
+
+        pubs.append(pub_copy)
       except Exception as e:
         print(f"Error: {e}")
 
