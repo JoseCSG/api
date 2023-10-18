@@ -46,15 +46,17 @@ def create_publication():
     if not data['title'] or not data['description'] or not data['user_id'] or not data['org_id']:
       return jsonify({"error": "Data not completed"})
     try:
+      print(data)
       pub = {
         "title": data["title"],
         "description": data["description"],
-        "img_url": data["img_url"],
+        "media_url": data["media_url"],
         "likes": 0,
         "comments": 0,
         "user_id": data["user_id"],
         "org_id": data["org_id"],
         "created_at": datetime.now(),
+        "media_type": data["media_type"]
       }
       db.publications.insert_one(pub)
       return jsonify({"message": "success!"}), 200
