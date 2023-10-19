@@ -153,8 +153,9 @@ def get_publications_user(id):
       res = []
       for id_pub in liked_pubs:
         pub = db.publications.find_one({"_id": ObjectId(id_pub)})
-        pub["img_org"] = db.organizations.find_one({"_id": ObjectId(pub["org_id"])})["img_src"]
-        res.append(pub)
+        pub_copy = deepcopy(pub)
+        pub_copy["img_org"] = db.organizations.find_one({"_id": ObjectId(pub["org_id"])})["img_src"]
+        res.append(pub_copy)
         
       res = json_util.dumps(res)
       return Response(res, mimetype='application/json'), 200
